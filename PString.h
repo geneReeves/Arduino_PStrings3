@@ -42,10 +42,14 @@ public:
 
 public:
 
-  // Basic constructor requires a preallocated buffer
-  PString(char *buf, size_t size) : _buf(buf), _size(size)
+  // Basic constructor GgR - removed requirment for buffer (allowing empty Constructor) 
+  PString(char *buf=NULL, size_t size=0) : _buf(buf), _size(size)
   { begin(); }
 
+  // allows you to set a new buffer.
+  void setBuffer(char *buf, size_t size) 
+  {_buf=buf; _size=size; begin();};
+  
   // templated constructors allow inline renderings of this type: PString(buf, size, myfloat[, modifier]);
   template<class T> PString(char *buf, size_t size, T arg) : _buf(buf), _size(size) 
   { begin(); print(arg); }
@@ -82,6 +86,11 @@ public:
 
   // Safe access to sprintf-like formatting, e.g. str.format("Hi, my name is %s and I'm %d years old", name, age);
   int format(char *str, ...);
+  int format(const __FlashStringHelper *str, ...);
+
+  int format_P(const char *str, ...);
+  
+  size_t print_P(PGM_P str);
 };
 
 #endif

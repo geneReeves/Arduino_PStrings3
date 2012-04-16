@@ -57,4 +57,38 @@ int PString::format(char *str, ...)
   return ret;
 }
 
+int PString::format(const __FlashStringHelper *str, ...) 
+{ 
+  va_list argptr;  
+  va_start(argptr, str); 
+  const prog_char *p = (const prog_char *)str;
+  int ret = vsnprintf_P((char *)_cur, _size - (_cur - _buf), p, argptr);
+  va_end(argptr);
+  if (_size)
+     while (*_cur) 
+        ++_cur;
+  return ret;
+}
+
+int PString::format_P(PGM_P str, ...) 
+{ 
+  va_list argptr;  
+  va_start(argptr, str); 
+  int ret = vsnprintf_P((char *)_cur, _size - (_cur - _buf), str, argptr);
+  va_end(argptr);
+  if (_size)
+     while (*_cur) 
+        ++_cur;
+  return ret;
+}
+
+size_t PString::print_P(PGM_P str)
+{
+  while (_buf[*_cur++] = pgm_read_byte(str++)) 
+    if (*_cur == _size)
+	  break;
+  _buf[*_cur++] ='\0';
+}
+
+
 

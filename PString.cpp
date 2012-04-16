@@ -26,6 +26,19 @@ void PString::begin()
     _buf[0] = '\0';
 }
 
+void PString::setBuffer(char *buffer, size_t size) 
+{
+  _buf=buffer; 
+  _size=size; 
+  if ((_buf==NULL) && (_size > 0))
+  {
+	// allocating our own buffer;
+	_weOwn = true;
+	_buf = (char *)calloc(_size + 1, sizeof(char));
+  }
+  begin();
+} 
+
 #if defined(ARDUINO) && ARDUINO >= 100
 size_t PString::write(uint8_t b)
 #else

@@ -18,16 +18,38 @@
 */
 
 #include "PString.h"
-
+/**
+ * \file PString.cpp
+ * \brief Implementation for PString class
+ * \remark Update - GgR 04-15-2012 - added code to begin() to zero entire buffer.
+ * \remark Update - GgR 04-15-2012 - added format(__FlashStringHelper *str, ..);
+ * \remark Update - GgR 04-15-2012 - added format_P(PGM_P str, ...);
+ * \remark Update - GgR 04-15-2012 - added print_P(PGM_P str, ...);
+ * \remark Update - GgR 04-15-2012 - changed setBuffer buffer==NULL && size > 0 = PString will allocate buffer and free it on destroy.
+ * \remark Update - GgR 04-15-2012 - changed Constructor to allow for empty constructor
+ * \remark Update - GgR 04-15-2012 - added setBuffer(char *buffer, size_t size);
+ * \remark Update - GgR 04-16-2012 - fised bug in setBuffer (did not free buffer if we owned it)
+ */
 void PString::begin()
 {
   _cur = _buf;
+  if (!_buf)
+  {
+	_size = 0;
+  }
   if (_size > 0)
-    _buf[0] = '\0';
+  {
+	// zero entire buffer !
+    /* _buf[0] = '\0'; */
+	memset(_buf, 0 , _size);
+  }
 }
 
 void PString::setBuffer(char *buffer, size_t size) 
 {
+  if ((_weOwn) &&(_buf))
+	free(_buf);
+  
   _buf=buffer; 
   _size=size; 
   if ((_buf==NULL) && (_size > 0))
